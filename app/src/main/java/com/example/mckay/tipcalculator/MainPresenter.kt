@@ -1,30 +1,23 @@
 package com.example.mckay.tipcalculator
 
-import android.widget.Toast
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-
-class MainPresenter(mainInterface: MainInterface) {
-
-    interface MainInterface {
-        val compositeDisposable2: CompositeDisposable
-        fun hamburgerMenuClicks(): Observable<HamburgerMenuItem>
-        fun handleBillHistory()
-        fun handleSettings()
-        fun handleLogin()
+class MainPresenter(private val view: MainContract.MainView) : MainContract.MainPresenter {
+    override fun onDestroy() {
+        view.compositeDisposable.clear()
     }
 
-    private val view = mainInterface
+    override fun onCreate() {
+       observeHamburgerMenuClicks()
+    }
 
-    fun handleHamburgerMenuClicks() {
+    override fun observeHamburgerMenuClicks() {
         view.hamburgerMenuClicks().subscribe { item ->
             when (item) {
                 HamburgerMenuItem.BILL_HISTORY -> view.handleBillHistory()
                 HamburgerMenuItem.SETTINGS -> view.handleSettings()
                 HamburgerMenuItem.LOGIN -> view.handleLogin()
             }
-        }.addTo(view.compositeDisposable2)
+        }.addTo(view.compositeDisposable)
     }
 }

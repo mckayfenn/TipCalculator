@@ -22,7 +22,11 @@ class HamburgerMenuItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemV
 }
 
 class HamburgerMenuAdapter: RecyclerView.Adapter<HamburgerMenuItemViewHolder>() {
-    private var listItems = mutableListOf<HamburgerMenuItem>()
+    private var listItems = mutableListOf(
+        HamburgerMenuItem.BILL_HISTORY,
+        HamburgerMenuItem.LOGIN,
+        HamburgerMenuItem.SETTINGS
+    )
     private val menuItemClicked = PublishSubject.create<HamburgerMenuItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HamburgerMenuItemViewHolder {

@@ -6,17 +6,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
-class MainActivity : AppCompatActivity() , MainPresenter.MainInterface {
-    override val compositeDisposable2: CompositeDisposable = CompositeDisposable()
-    private val compositeDisposable = CompositeDisposable()
+class MainActivity : AppCompatActivity() , MainContract.MainView {
+    override val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val hamburgerMenuAdapter = HamburgerMenuAdapter()
-    private val presenter = MainPresenter(this)
+    lateinit var presenter: MainContract.MainPresenter
+
+    override fun setPresenter(presenter: MainPresenter) {
+        this.presenter = presenter
+    }
 
     override fun handleBillHistory() {
         Toast.makeText(this, "Bill History Clicked", Toast.LENGTH_SHORT).show()
@@ -34,11 +34,14 @@ class MainActivity : AppCompatActivity() , MainPresenter.MainInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setPresenter(MainPresenter(this))
+        presenter.onCreate()
+
         calculateTipAndTotalAmount()
-        settupHamburgerMenu()
+        setupHamburgerMenu()
     }
 
-    fun settupHamburgerMenu() {
+    fun setupHamburgerMenu() {
         recycleView.layoutManager = LinearLayoutManager(this)
         recycleView.adapter = hamburgerMenuAdapter
     }
@@ -47,8 +50,7 @@ class MainActivity : AppCompatActivity() , MainPresenter.MainInterface {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
-        compositeDisposable2.clear()
+        presenter.onDestroy()
     }
 
     fun calcButtonClicked(): Observable<Float> {
@@ -64,10 +66,10 @@ class MainActivity : AppCompatActivity() , MainPresenter.MainInterface {
 
     fun calculateTipAndTotalAmount() {
         calcButtonClicked().flatMap { tip ->
-            Observable.just(tip * billAmount.text.toString().toFloat())
+            Observable.just((tip/100) * billAmount.text.toString().toFloat())
         }.subscribe { tipAmount ->
-            tipAmountLabel.text = "$ " + tipAmount.toString()
-            totalAmountLabel.text = "$ " + (tipAmount + billAmount.text.toString().toFloat()).toString()
+            tipAmountLabel.text = tipAmount.toString()
+            totalAmountLabel.text = (tipAmount + billAmount.text.toString().toFloat()).toString()
         }.addTo(compositeDisposable)
     }
 }
