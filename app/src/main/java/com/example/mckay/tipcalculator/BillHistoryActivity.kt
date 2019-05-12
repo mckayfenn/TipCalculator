@@ -1,5 +1,6 @@
 package com.example.mckay.tipcalculator
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.os.PersistableBundle
@@ -18,7 +19,7 @@ class BillHistoryActivity : AppCompatActivity(), BillHistoryContract.BillHistory
     lateinit var recyclerView: RecyclerView
     lateinit var viewAdapter: RecyclerView.Adapter<BillHistoryViewHolder>
     lateinit var viewLayoutManager: RecyclerView.LayoutManager
-    var bills = arrayListOf<BillHistoryViewItem>()
+    //var bills = arrayListOf<BillHistoryViewItem>()
     override fun setPresenter(presenter: BillHistoryContract.BillHistoryPresenter) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -27,12 +28,12 @@ class BillHistoryActivity : AppCompatActivity(), BillHistoryContract.BillHistory
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bill_history_view)
 
-        if (intent.extras != null) {
-            bills = intent.getParcelableArrayListExtra("Bills")
-        }
+//        if (intent.extras != null) {
+//            bills = intent.getParcelableArrayListExtra("Bills")
+//        }
 
         viewLayoutManager = LinearLayoutManager(this)
-        viewAdapter = BillHistoryListAdapter(bills)
+        viewAdapter = BillHistoryListAdapter(this)
         recyclerView = billHistoryList.apply {
             layoutManager = viewLayoutManager
             adapter = viewAdapter
@@ -48,8 +49,10 @@ class BillHistoryActivity : AppCompatActivity(), BillHistoryContract.BillHistory
 
 }
 
-class BillHistoryListAdapter(val bills: ArrayList<BillHistoryViewItem>) : RecyclerView.Adapter<BillHistoryViewHolder>() {
+class BillHistoryListAdapter(private val context: Context) : RecyclerView.Adapter<BillHistoryViewHolder>() {
 
+    val dbSyncer = DBSyncer(context)
+    val bills = dbSyncer.getBillHistoryList()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): BillHistoryViewHolder {
         return BillHistoryViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.bill_history_menu_item, p0, false))
