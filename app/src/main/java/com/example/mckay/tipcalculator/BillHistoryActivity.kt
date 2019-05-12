@@ -19,7 +19,6 @@ class BillHistoryActivity : AppCompatActivity(), BillHistoryContract.BillHistory
     lateinit var recyclerView: RecyclerView
     lateinit var viewAdapter: RecyclerView.Adapter<BillHistoryViewHolder>
     lateinit var viewLayoutManager: RecyclerView.LayoutManager
-    //var bills = arrayListOf<BillHistoryViewItem>()
     override fun setPresenter(presenter: BillHistoryContract.BillHistoryPresenter) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -27,10 +26,6 @@ class BillHistoryActivity : AppCompatActivity(), BillHistoryContract.BillHistory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bill_history_view)
-
-//        if (intent.extras != null) {
-//            bills = intent.getParcelableArrayListExtra("Bills")
-//        }
 
         viewLayoutManager = LinearLayoutManager(this)
         viewAdapter = BillHistoryListAdapter(this)

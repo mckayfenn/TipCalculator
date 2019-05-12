@@ -24,17 +24,13 @@ class MainActivity : AppCompatActivity() , MainContract.MainView {
     lateinit var presenter: MainContract.MainPresenter
     lateinit var dbSyncer: DBSyncer
 
-//    var bills = arrayListOf(BillHistoryViewItem("Olive Garden", "100", "104", "5/11/2019"),
-//        BillHistoryViewItem("Panda Express", "24.45", "25.54", "5/12/2019"),
-//        BillHistoryViewItem("McDonalds", "10.00", "12.00", "5/13/2019"))
-
     override fun setPresenter(presenter: MainPresenter) {
         this.presenter = presenter
     }
 
     override fun handleBillHistory() {
         Toast.makeText(this, "Bill History Clicked", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, BillHistoryActivity::class.java)//.putParcelableArrayListExtra("Bills", bills)
+        val intent = Intent(this, BillHistoryActivity::class.java)
         router.showBillHistory(this, intent)
     }
 
